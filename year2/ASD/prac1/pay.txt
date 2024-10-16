@@ -1,0 +1,9 @@
+Emma 15 3
+Sofia 12 4
+Olivia 16 3
+Emma 20 2
+Sofia 3 16
+Olivia 5 25
+Emma 56 1
+Sofia 24 2
+Olivia 7 6
