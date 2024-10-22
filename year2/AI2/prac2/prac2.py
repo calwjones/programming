@@ -32,10 +32,6 @@ best_fit_off_list = []
 for generation in range(GENERATIONS):
     for ind in population:
         ind.fitness = test_function(ind)
-    best_individual = population[0] 
-    for ind in population:
-        if ind.fitness > best_individual.fitness:
-            best_individual = ind
 
     offspring = []
 
@@ -87,24 +83,31 @@ for generation in range(GENERATIONS):
     avg_fit_pop = total_fit_pop / P
     avg_fit_off = total_fit_off / P
 
-    best_fit_pop = max(ind.fitness for ind in population)
-    best_fit_off = max(ind.fitness for ind in offspring)
+    best_fit_pop = max(population, key=lambda ind: ind.fitness)
+    best_fit_off = max(offspring, key=lambda ind: ind.fitness)
+    best_fit_pop_num = max(ind.fitness for ind in population)
+    best_fit_off_num = max(ind.fitness for ind in offspring)
 
     print(f"Generation {generation + 1}:")
     print(f"total population fitness: {total_fit_pop}, total offspring fitness: {total_fit_off}")
     print(f"avg population fitness: {avg_fit_pop}, avg offspring fitness: {avg_fit_off}")
-    print(f"best population fitness: {best_fit_pop}, best offspring fitness: {best_fit_off}\n")
+    print(f"best population fitness: {best_fit_pop_num}, best offspring fitness: {best_fit_off_num}\n")
 
-    if best_fit_pop>=best_fit_off:
-        population=copy.deepcopy(offspring)
-        population[0] = best_individual
-    elif avg_fit_pop>=avg_fit_off:
-        print()
+#    if best_fit_pop>best_fit_off:
+#        print()
+#    elif avg_fit_pop>avg_fit_off:
+#        print()
+#    elif total_fit_pop>total_fit_off:
+#        print()
+#    else:    
+
+    best_index_off = offspring.index(best_fit_off)
+    if best_fit_pop.fitness>best_fit_off.fitness:
+        offspring[best_index_off] = copy.deepcopy(best_fit_pop)
     population = copy.deepcopy(offspring)
 
     avg_fit_off_list.append(avg_fit_off)
-    best_fit_off_list.append(best_fit_off)
-
+    best_fit_off_list.append(max(ind.fitness for ind in offspring))
 
 
 print(f"Avg fitness list length: {len(avg_fit_off_list)}")
@@ -117,3 +120,4 @@ plt.ylabel('Fitness')
 plt.legend()
 plt.grid()
 plt.show()
+
