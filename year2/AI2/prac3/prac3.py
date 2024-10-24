@@ -3,8 +3,11 @@ import copy
 import matplotlib.pyplot as plt
 P = 50
 N = 50
-MUTRATE = 1/N
+MUTRATE = .05
 GENERATIONS = 50
+MIN = 0.0
+MAX = 1.0
+MUTSTEP = 0.3
 
 class Individual:
     def __init__(self):
@@ -15,7 +18,7 @@ population = []
 for x in range (0, P):
     tempgene=[]
     for y in range (0, N):
-        tempgene.append( random.randint(0,1))
+        tempgene.append(random.uniform(MIN,MAX))
     newind = Individual()
     newind.gene = tempgene.copy()
     population.append(newind) 
@@ -35,15 +38,18 @@ for generation in range(GENERATIONS):
 
     offspring = []
 
-    for i in range (0, P):
-        parent1 = random.randint( 0, P-1 )
-        off1 = copy.deepcopy(population[parent1])
-        parent2 = random.randint( 0, P-1 )
-        off2 = copy.deepcopy(population[parent2])
-        if off1.fitness > off2.fitness:
-            offspring.append( off1 )
-        else:
-            offspring.append( off2 )
+    for i in range(0, P):
+        newind = Individual()
+        newind.gene = []
+        for j in range(0, N):
+            gene = population[i].gene[j]
+            mutprob = random.random()
+            if mutprob < MUTRATE:
+                alter = random.uniform(-MUTSTEP, MUTSTEP)
+                gene = gene + alter
+                gene = max(MIN, min(MAX, gene))  
+            newind.gene.append(gene)
+        offspring.append(newind)
 
     toff1 = Individual()
     toff2 = Individual()
@@ -59,8 +65,6 @@ for generation in range(GENERATIONS):
         offspring[i] = copy.deepcopy(toff1)
         offspring[i+1] = copy.deepcopy(toff2)
 
-        offspring[i] = newind
-
     for ind in offspring:
         ind.fitness = test_function(ind)
 
@@ -70,24 +74,23 @@ for generation in range(GENERATIONS):
     avg_fit_pop = total_fit_pop / P
     avg_fit_off = total_fit_off / P
 
-    best_fit_pop = max(population, key=lambda ind: ind.fitness)
-    best_fit_off = max(offspring, key=lambda ind: ind.fitness)
-    best_fit_pop_num = max(ind.fitness for ind in population)
-    best_fit_off_num = max(ind.fitness for ind in offspring)
-
-    print(f"Generation {generation + 1}:")
-    print(f"total population fitness: {total_fit_pop}, total offspring fitness: {total_fit_off}")
-    print(f"avg population fitness: {avg_fit_pop}, avg offspring fitness: {avg_fit_off}")
-    print(f"best population fitness: {best_fit_pop_num}, best offspring fitness: {best_fit_off_num}\n")  
+    best_fit_pop = min(population, key=lambda ind: ind.fitness)
+    best_fit_off = min(offspring, key=lambda ind: ind.fitness)
+    best_fit_pop_num = min(ind.fitness for ind in population)
+    best_fit_off_num = min(ind.fitness for ind in offspring)
 
     best_index_off = offspring.index(best_fit_off)
-    if best_fit_pop.fitness>best_fit_off.fitness:
+    if best_fit_pop.fitness<best_fit_off.fitness:
         offspring[best_index_off] = copy.deepcopy(best_fit_pop)
     population = copy.deepcopy(offspring)
 
     avg_fit_off_list.append(avg_fit_off)
-    best_fit_off_list.append(max(ind.fitness for ind in offspring))
+    best_fit_off_list.append(min(ind.fitness for ind in offspring))
 
+    print(f"Generation {generation + 1}:")
+    print(f"total population fitness: {total_fit_pop}, total offspring fitness: {total_fit_off}")
+    print(f"avg population fitness: {avg_fit_pop}, avg offspring fitness: {avg_fit_off}")
+    print(f"best population fitness: {best_fit_pop_num}, best offspring fitness: {best_fit_off_num}\n")
 
 print(f"Avg fitness list length: {len(avg_fit_off_list)}")
 print(f"Best fitness list length: {len(best_fit_off_list)}")
@@ -99,4 +102,3 @@ plt.ylabel('Fitness')
 plt.legend()
 plt.grid()
 plt.show()
-
