@@ -59,6 +59,19 @@ for generation in range(GENERATIONS):
         offspring[i] = copy.deepcopy(toff1)
         offspring[i+1] = copy.deepcopy(toff2)
 
+    for i in range( 0, P ):
+        newind = Individual()
+        newind.gene = []
+        for j in range( 0, N ):
+            gene = offspring[i].gene[j]
+            mutprob = random.random()
+            if mutprob < MUTRATE:
+                if( gene == 1):
+                    gene = 0
+                else:
+                    gene = 1
+            newind.gene.append(gene)
+
         offspring[i] = newind
 
     for ind in offspring:
