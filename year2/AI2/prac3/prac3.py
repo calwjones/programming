@@ -1,13 +1,13 @@
 import random 
 import copy
 import matplotlib.pyplot as plt
-P = 50
+P = 100
 N = 50
-MUTRATE = 1/N
-GENERATIONS = 50
+MUTRATE = 2/N
+GENERATIONS = 100
 MIN = 0.0
 MAX = 1.0
-MUTSTEP = 0.1
+MUTSTEP = 0.15
 
 class Individual:
     def __init__(self):
@@ -78,6 +78,11 @@ for generation in range(GENERATIONS):
     best_fit_off = min(offspring, key=lambda ind: ind.fitness)
     best_fit_pop_num = min(ind.fitness for ind in population)
     best_fit_off_num = min(ind.fitness for ind in offspring)
+
+    worst_fit_off = max(offspring, key=lambda ind: ind.fitness) 
+    worst_index_off = offspring.index(worst_fit_off)
+    if avg_fit_pop < avg_fit_off:
+        offspring[worst_index_off] = copy.deepcopy(best_fit_pop)
 
     best_index_off = offspring.index(best_fit_off)
     if best_fit_pop.fitness<best_fit_off.fitness:
