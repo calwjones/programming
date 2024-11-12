@@ -1,16 +1,14 @@
 import random 
 import copy
 import matplotlib.pyplot as plt
-import math
 
 P = 50
-N = 10
+N = 20
 MUTRATE = 1/N
 GENERATIONS = 100
-MIN = -5.12
-MAX = 5.12
+MIN = -10
+MAX = 10
 MUTSTEP = 0.1
-
 
 class Individual:
     def __init__(self):
@@ -27,10 +25,10 @@ for x in range (0, P):
     population.append(newind) 
 
 def test_function(ind):
-    n = 10
-    utility = 10 * n
-    for i in range(n):
-        utility += ind.gene[i]**2 - 10 * math.cos(2 * math.pi * ind.gene[i])
+    d = 20
+    utility=(ind.gene[0]-1)**2
+    for i in range(1,d):
+        utility += i * ((2*(ind.gene[i]**2)-ind.gene[i-1])**2)
     return utility
 
 avg_fit_off_list = []
