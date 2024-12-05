@@ -5,11 +5,11 @@ import math
 
 P = 50
 N = 20
-MUTRATE = 1/N
-GENERATIONS = 100
+MUTRATE = 0.5
+GENERATIONS = 250
 MIN = -500
 MAX = 500
-MUTSTEP = 0.1
+MUTSTEP = 0.7
 
 class Individual:
     def __init__(self):
@@ -96,6 +96,7 @@ for generation in range(GENERATIONS):
     avg_fit_off_list.append(avg_fit_off)
     best_fit_off_list.append(min(ind.fitness for ind in offspring))
 
+
     print(f"Generation {generation + 1}:")
     print(f"total population fitness: {total_fit_pop}, total offspring fitness: {total_fit_off}")
     print(f"avg population fitness: {avg_fit_pop}, avg offspring fitness: {avg_fit_off}")
@@ -105,9 +106,7 @@ print(f"Avg fitness list length: {len(avg_fit_off_list)}")
 print(f"Best fitness list length: {len(best_fit_off_list)}")
 plt.plot(range(1, GENERATIONS + 1), avg_fit_off_list, label='Average Offspring Fitness')
 plt.plot(range(1, GENERATIONS + 1), best_fit_off_list, label='Best Offspring Fitness')
-plt.title('Offspring Fitness over Generations')
 plt.xlabel('Generation')
 plt.ylabel('Fitness')
-plt.legend()
-plt.grid()
 plt.show()
+

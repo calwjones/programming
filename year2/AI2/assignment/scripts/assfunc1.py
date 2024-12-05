@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 P = 50
 N = 20
-MUTRATE = 1/N
-GENERATIONS = 100
+MUTRATE = 0.5
+GENERATIONS = 200
 MIN = -10
 MAX = 10
-MUTSTEP = 0.1
+MUTSTEP = 0.5
 
 class Individual:
     def __init__(self):
