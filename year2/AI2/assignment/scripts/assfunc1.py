@@ -15,6 +15,7 @@ class Individual:
         self.gene = [0]*N
         self.fitness = 0
 
+# initialise the population with random individuals
 population = []
 for x in range (0, P):
     tempgene=[]
@@ -34,12 +35,14 @@ def test_function(ind):
 avg_fit_off_list = []
 best_fit_off_list = []
 
+# main evolutionary loop
 for generation in range(GENERATIONS):
     for ind in population:
         ind.fitness = test_function(ind)
 
     offspring = []
     
+    # apply mutation to create offspring
     for i in range(0, P):
         newind = Individual()
         newind.gene = []
@@ -47,12 +50,13 @@ for generation in range(GENERATIONS):
             gene = population[i].gene[j]
             mutprob = random.random()
             if mutprob < MUTRATE:
-                alter = random.uniform(-MUTSTEP, MUTSTEP)
+                alter = random.uniform(-MUTSTEP, MUTSTEP) # using mutstep and mutrate to mutate 
                 gene = gene + alter
                 gene = max(MIN, min(MAX, gene))  
             newind.gene.append(gene)
         offspring.append(newind)
 
+    # apply crossover between pairs of offspring
     toff1 = Individual()
     toff2 = Individual()
     temp = Individual()
@@ -67,6 +71,7 @@ for generation in range(GENERATIONS):
         offspring[i] = copy.deepcopy(toff1)
         offspring[i+1] = copy.deepcopy(toff2)
 
+    #fitness evaluation
     for ind in offspring:
         ind.fitness = test_function(ind)
 
@@ -81,11 +86,13 @@ for generation in range(GENERATIONS):
     best_fit_pop_num = min(ind.fitness for ind in population)
     best_fit_off_num = min(ind.fitness for ind in offspring)
 
+    # replace worst offspring with best individual
     worst_fit_off = max(offspring, key=lambda ind: ind.fitness) 
     worst_index_off = offspring.index(worst_fit_off)
     if avg_fit_pop < avg_fit_off:
         offspring[worst_index_off] = copy.deepcopy(best_fit_pop)
 
+    #keep the best solution in the population
     best_index_off = offspring.index(best_fit_off)
     if best_fit_pop.fitness<best_fit_off.fitness:
         offspring[best_index_off] = copy.deepcopy(best_fit_pop)
